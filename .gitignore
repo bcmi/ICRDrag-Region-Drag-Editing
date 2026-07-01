@@ -1,0 +1,27 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+*.so
+
+# Local environments and runtime outputs.
+.conda-release/
+.ruff_cache/
+outputs/
+logs/
+wandb/
+
+# Large assets are distributed via Baidu Netdisk.
+data/
+weights/
+
+# Legacy local source tree kept outside the release layout.
+code/
+scripts/
+
+# Local papers, archives, and checksums.
+*.pdf
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.sha256

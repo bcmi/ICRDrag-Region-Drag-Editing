@@ -1,0 +1,30 @@
+# CUDA 12.8 wheels are recommended for Blackwell GPUs.
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+torch==2.11.0+cu128
+torchvision==0.26.0+cu128
+accelerate
+diffusers
+einops
+huggingface-hub
+httpx
+lpips
+matplotlib
+ninja
+numpy
+opencv-python-headless
+pillow
+protobuf
+safetensors
+scikit-image
+scipy
+sentencepiece
+tiktoken
+tqdm
+transformers
+
+# Optional: only needed if you explicitly want FlashAttention kernels.
+# flash-attn
+
+# Optional: only required for multiview/ray generation, not for ICRDrag inference/evaluation.
+# pytorch3d
