@@ -17,7 +17,7 @@ diffusion backbone.
 
 Try the ICRDrag demo at https://drag.ustcnewly.com/.
 
-<video src="demo_v3.mp4" controls muted></video>
+[Demo video](demo_v3.mp4)
 
 ## Dataset Overview
 
