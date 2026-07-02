@@ -220,6 +220,10 @@ evaluation/DragBench/DragBench_SR/
 
 Each folder contains scripts for MSE / LPIPS / SSIM, MD, and mMD.
 
+## Other Resources
+
++ [Awesome-Drag-Style-Editing](https://github.com/bcmi/Awesome-Drag-Style-Editing)
+  
 ## BibTeX
 
 If you use ICRDrag, PRD, PRDBench, or the released results, please cite:
@@ -232,6 +236,10 @@ If you use ICRDrag, PRD, PRDBench, or the released results, please cite:
   year={2026}
 }
 ```
+
+
+
+
 
 ## Acknowledgement
 
