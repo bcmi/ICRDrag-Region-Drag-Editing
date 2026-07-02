@@ -1,23 +1,23 @@
-# ICRDrag
+# ICRDrag: Drag Any Region to Any Shape  [![Static Badge](https://img.shields.io/badge/Paper-red)](https://arxiv.org/abs/2606.25907) [![Static Badge](https://img.shields.io/badge/Demo-green)](https://drag.ustcnewly.com/)
 
 This is the official repository for the following paper:
 
-In-context Region-based Drag: Drag Any Region to Any Shape [[arXiv]](https://arxiv.org/abs/2606.25907)
+> **In-context Region-based Drag: Drag Any Region to Any Shape** [[arXiv]](https://arxiv.org/abs/2606.25907) <br>
+>
+> Jiacheng Sui<sup>†</sup>, Tianyu Hao<sup>†</sup>, Bingjie Gao, Li Niu*, Guangtao Zhai <br>
+> Accepted by ECCV, 2026. <sup>†</sup> equal contributions. * corresponding author. 
 
-Jiacheng Sui, Tianyu Hao, Bingjie Gao, Li Niu, Guangtao Zhai
-
-arXiv preprint arXiv:2606.25907, 2026.
-
-ICRDrag is an image region dragging/editing method with a NextDiT-based
-diffusion backbone.
+ICRDrag is a drag-style image editing model which supports dragging multiple source regions to their corresponding target regions. Such model can be used for fine-grained geometric editing like pose adjustment and shape transformation. 
 
 ![ICRDrag teaser](Figure1.png)
 
 ## Online Demo
 
-Try the ICRDrag demo at https://drag.ustcnewly.com/.
+Try the ICRDrag demo at https://drag.ustcnewly.com/. Users can draw multiple pairs of source and target regions in different colors, then drag each source region to its corresponding target region. 
 
-[Demo video](demo_v3.mp4)
+Note that ICRDrag does not guarantee that every case reaches the ideal edit in a single inference run; some cases may require multiple runs. If undesired changes appear in other areas, you can add anchor-like source-target region pairs to keep the rest of the scene unchanged.
+
+[![]](https://github.com/user-attachments/assets/4c7dd7d0-142d-46b0-b5dd-8f2e16cde707)
 
 ## Dataset Overview
 
@@ -36,15 +36,9 @@ provided for evaluating ICRDrag on DragBench-DR and DragBench-SR.
 
 ## Dataset Download
 
-Large files are distributed through Baidu Netdisk instead of GitHub.
-
-Datasets and released best results are available from
+Datasets and our results are available from
 [[Baidu_Cloud]](https://pan.baidu.com/s/10c47ayBtbluhMzJ-Ocl3LQ?pwd=a83m)
-(access code: `a83m`).
-
-Model weights are available from
-[[Baidu_Cloud]](https://pan.baidu.com/s/1YpNXdfqOu7fOrJYKGdb-Lw?pwd=63ue)
-(access code: `63ue`).
+(access code: `a83m`). 
 
 We release the following assets:
 
@@ -56,11 +50,6 @@ PRDBench_results_opt.tar          # best PRDBench results
 DragBench_result.tar              # best DragBench results
 ICRDrag_weights.tar.gz            # ICRDrag model weights
 ```
-
-We also release the best generated results on PRDBench and DragBench. ICRDrag
-does not guarantee that every case reaches the ideal edit in a single inference
-run; some cases may require multiple runs, so these archives make the reported
-evaluation outputs directly reproducible.
 
 After downloading, the expected data layout is:
 
@@ -75,6 +64,12 @@ data/
     ├── openvid_format_dbscan_dr/
     └── openvid_format_dbscan_sr/
 ```
+
+## Model Download
+
+Model weights are available from
+[[Baidu_Cloud]](https://pan.baidu.com/s/1YpNXdfqOu7fOrJYKGdb-Lw?pwd=63ue)
+(access code: `63ue`).
 
 The model weights should be restored to:
 
@@ -91,11 +86,7 @@ weights/ICRDrag/
 ## Our ICRDrag
 
 This repository provides the PyTorch implementation, inference scripts,
-evaluation scripts, released model weights, released datasets, and the best
-generated results on PRDBench and DragBench.
-
-The GitHub repository contains only code and lightweight metadata. Model
-weights, datasets, and result archives are released as Baidu Netdisk downloads.
+evaluation scripts.
 
 ## Installation
 
@@ -237,7 +228,7 @@ If you use ICRDrag, PRD, PRDBench, or the released results, please cite:
 @article{sui2026incontext,
   title={In-context Region-based Drag: Drag Any Region to Any Shape},
   author={Sui, Jiacheng and Hao, Tianyu and Gao, Bingjie and Niu, Li and Zhai, Guangtao},
-  journal={arXiv preprint arXiv:2606.25907},
+  journal={ECCV},
   year={2026}
 }
 ```
@@ -247,3 +238,5 @@ If you use ICRDrag, PRD, PRDBench, or the released results, please cite:
 This implementation is built based on the
 [OneDiffusion](https://github.com/OneDiffusion/OneDiffusion) codebase. We thank
 the authors for their excellent open-source work.
+
+Thanks to [Wenxuan Wu](https://github.com/wuwenxuan) for developing the Gradio demo and capturing its demo video.
