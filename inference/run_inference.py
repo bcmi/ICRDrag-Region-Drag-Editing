@@ -111,11 +111,8 @@ def run_icrdrag(pipeline, image, num_inference_steps, guidance_scale):
     ).images[0]
 
 
-def load_rgb_image(path, image_width, image_height, source_order="rgb"):
-    image = Image.open(path).convert("RGB").resize((image_width, image_height))
-    if source_order == "bgr":
-        image = Image.fromarray(np.array(image)[:, :, ::-1])
-    return image
+def load_rgb_image(path, image_width, image_height):
+    return Image.open(path).convert("RGB").resize((image_width, image_height))
 
 
 def load_prd_sample(entry, base_path, image_width, image_height):
@@ -124,14 +121,10 @@ def load_prd_sample(entry, base_path, image_width, image_height):
     tgt_mask_name = os.path.basename(entry["tgt_mask_path"]).replace("mask", "color")
 
     src_img_path = os.path.join(base_path, "source_images_rgb", src_img_name)
-    src_order = "rgb"
-    if not os.path.exists(src_img_path):
-        src_img_path = os.path.join(base_path, "source_images", src_img_name)
-        src_order = "bgr"
     src_mask_path = os.path.join(base_path, "source_masks_color", src_mask_name)
     tgt_mask_path = os.path.join(base_path, "target_masks_color", tgt_mask_name)
 
-    start_frame = load_rgb_image(src_img_path, image_width, image_height, src_order)
+    start_frame = load_rgb_image(src_img_path, image_width, image_height)
     start_mask = load_rgb_image(src_mask_path, image_width, image_height)
     target_mask = load_rgb_image(tgt_mask_path, image_width, image_height)
 
