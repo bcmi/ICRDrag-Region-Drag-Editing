@@ -79,7 +79,9 @@ def load_eval_mask(
     white_threshold: int = 127,
 ) -> np.ndarray:
     """
-    Load PRD masks (white = mask), resize to target_size, return one binary mask.
+    Load PRD masks and resize to target_size, returning one binary mask.
+    Binary masks use white = mask. Color masks use neutral gray as background
+    and non-gray colored regions as mask.
     DragLoRA's original m-MD evaluator uses one mask in the edited image; PRD target masks
     are the closest equivalent.
     """
@@ -88,8 +90,14 @@ def load_eval_mask(
             return np.zeros(size, dtype=np.uint8)
         img = np.array(Image.open(path))
         if img.ndim == 3:
-            img = img[:, :, 0]
-        mask = (img > white_threshold).astype(np.uint8)
+            channel_delta = np.max(img, axis=2) - np.min(img, axis=2)
+            if channel_delta.max() <= 5:
+                img = img[:, :, 0]
+                mask = (img > white_threshold).astype(np.uint8)
+            else:
+                mask = (np.max(np.abs(img.astype(np.int16) - 128), axis=2) > 5).astype(np.uint8)
+        else:
+            mask = (img > white_threshold).astype(np.uint8)
         if mask.shape[:2] != size:
             from PIL import Image as PILImage
             mask_pil = PILImage.fromarray(mask)
@@ -158,17 +166,17 @@ def main():
         "--source_masks_dir",
         type=str,
         default=os.path.join(
-            PROJECT_ROOT, "data/PRDBench/test/source_masks"
+            PROJECT_ROOT, "data/PRDBench/test/source_masks_color"
         ),
-        help="Directory of source masks (white = mask)",
+        help="Directory of source masks",
     )
     parser.add_argument(
         "--target_masks_dir",
         type=str,
         default=os.path.join(
-            PROJECT_ROOT, "data/PRDBench/test/target_masks"
+            PROJECT_ROOT, "data/PRDBench/test/target_masks_color"
         ),
-        help="Directory of target masks (white = mask)",
+        help="Directory of target masks",
     )
     parser.add_argument(
         "--model_path",

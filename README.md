@@ -31,8 +31,14 @@ PRD is the training dataset for region-based image dragging. It contains
 source image, source region mask, target image, target region mask
 ```
 
+The 287,153 tuples are generated from `processed_videos_rgb/` and
+`mask_numpys/` with `preprocessing/prepare_prd_tuples.py`.
+
 PRDBench is the main quantitative benchmark with 1000 tuples. DragBench is also
 provided for evaluating ICRDrag on DragBench-DR and DragBench-SR.
+For PRDBench inference and evaluation, use the released RGB image folders
+`source_images_rgb/` and `target_images_rgb/`, together with the color mask
+folders `source_masks_color/` and `target_masks_color/`.
 
 ## Dataset Download
 
@@ -43,12 +49,15 @@ Datasets and our results are available from
 We release the following assets:
 
 ```text
-PRD_train_processed_videos.tar    # PRD training set
-PRDBench_test.tar.gz              # PRDBench test set
-DragBench.tar.gz                  # DragBench test set
-PRDBench_results_opt.tar          # best PRDBench results
-DragBench_result.tar              # best DragBench results
-ICRDrag_weights.tar.gz            # ICRDrag model weights
+PRD_train_processed_videos.tar     # time-subsampled PRD training videos
+PRD_train_processed_videos_rgb.tar # RGB-converted PRD training videos
+mask_numpys.tar.gz                 # panoptic segmentation masks for PRD training videos
+PRD_train_tuples_287153.tar        # generated 287,153 PRD training tuples
+PRDBench_test.tar.gz               # PRDBench test set
+DragBench.tar.gz                   # DragBench test set
+PRDBench_results_opt.tar           # best PRDBench results
+DragBench_result.tar               # best DragBench results
+ICRDrag_weights.tar.gz             # ICRDrag model weights
 ```
 
 After downloading, the expected data layout is:
@@ -57,7 +66,8 @@ After downloading, the expected data layout is:
 data/
 ├── PRD/
 │   └── train/
-│       └── processed_videos/
+│       ├── processed_videos_rgb/
+│       └── mask_numpys/
 ├── PRDBench/
 │   └── test/
 └── DragBench/
@@ -82,6 +92,33 @@ weights/ICRDrag/
 ├── transformer/
 └── vae/
 ```
+
+## PRD Tuple Construction
+
+The released PRD training data is stored as RGB-converted time-subsampled videos
+and per-frame panoptic segmentation masks. During training, ICRDrag samples
+adjacent frames from `processed_videos_rgb/`, reads the corresponding `.npy`
+masks from `mask_numpys/`, and dynamically constructs:
+
+```text
+source image, source region mask, target image, target region mask
+```
+
+We provide a standalone script that reproduces this tuple construction process
+for inspection or preprocessing:
+
+```bash
+python3 preprocessing/prepare_prd_tuples.py \
+  --video_jsonl data/PRDBench/train/openvid_jsonl/train.jsonl \
+  --video_root data/PRD/train/processed_videos_rgb \
+  --mask_root data/PRD/train/mask_numpys \
+  --output_dir data/PRD/train/tuples_preview \
+  --num_tuples 1000 \
+  --video_channel_order bgr
+```
+
+The script writes RGB images and RGB region masks to `output_dir`, together
+with a `tuples.json` metadata file using relative paths.
 
 ## Our ICRDrag
 
@@ -192,8 +229,8 @@ mMD:
 python3 evaluation/PRDBench/compute_mMD_draglora.py \
   --drag_data_json data/PRDBench/test/drag_data.json \
   --source_images_dir data/PRDBench/test/source_images_rgb \
-  --source_masks_dir data/PRDBench/test/source_masks \
-  --target_masks_dir data/PRDBench/test/target_masks \
+  --source_masks_dir data/PRDBench/test/source_masks_color \
+  --target_masks_dir data/PRDBench/test/target_masks_color \
   --edited_dir outputs/prdbench/results \
   --output_txt outputs/evaluation/mMD_results/icrdrag_mMD.txt \
   --method_name ICRDrag \

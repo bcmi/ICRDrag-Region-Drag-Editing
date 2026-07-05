@@ -111,18 +111,29 @@ def run_icrdrag(pipeline, image, num_inference_steps, guidance_scale):
     ).images[0]
 
 
+def load_rgb_image(path, image_width, image_height, source_order="rgb"):
+    image = Image.open(path).convert("RGB").resize((image_width, image_height))
+    if source_order == "bgr":
+        image = Image.fromarray(np.array(image)[:, :, ::-1])
+    return image
+
+
 def load_prd_sample(entry, base_path, image_width, image_height):
     src_img_name = os.path.basename(entry["src_img_path"])
     src_mask_name = os.path.basename(entry["src_mask_path"]).replace("mask", "color")
     tgt_mask_name = os.path.basename(entry["tgt_mask_path"]).replace("mask", "color")
 
-    src_img_path = os.path.join(base_path, "source_images", src_img_name)
+    src_img_path = os.path.join(base_path, "source_images_rgb", src_img_name)
+    src_order = "rgb"
+    if not os.path.exists(src_img_path):
+        src_img_path = os.path.join(base_path, "source_images", src_img_name)
+        src_order = "bgr"
     src_mask_path = os.path.join(base_path, "source_masks_color", src_mask_name)
     tgt_mask_path = os.path.join(base_path, "target_masks_color", tgt_mask_name)
 
-    start_frame = Image.open(src_img_path).convert("RGB").resize((image_width, image_height))
-    start_mask = Image.open(src_mask_path).convert("RGB").resize((image_width, image_height))
-    target_mask = Image.open(tgt_mask_path).convert("RGB").resize((image_width, image_height))
+    start_frame = load_rgb_image(src_img_path, image_width, image_height, src_order)
+    start_mask = load_rgb_image(src_mask_path, image_width, image_height)
+    target_mask = load_rgb_image(tgt_mask_path, image_width, image_height)
 
     return {
         "name": entry["video_name"],
@@ -156,7 +167,7 @@ def run_prdbench(args, pipeline):
             args.num_inference_steps,
             args.guidance_scale,
         )
-        Image.fromarray(np.array(result_img)[:, :, ::-1]).save(result_path)
+        result_img.save(result_path)
 
 
 def run_dragbench(args, pipeline, split):
@@ -169,7 +180,13 @@ def run_dragbench(args, pipeline, split):
     )
 
     required_files = {"original_image.png", "source_mask.png", "target_mask.png"}
-    for item, item_path in tqdm(list(iterator), desc=f"DragBench-{split.upper()} inference"):
+    samples = list(iterator)
+    if args.max_samples is not None:
+        samples = samples[args.start_index : args.start_index + args.max_samples]
+    elif args.start_index:
+        samples = samples[args.start_index :]
+
+    for item, item_path in tqdm(samples, desc=f"DragBench-{split.upper()} inference"):
         filenames = set(os.listdir(item_path))
         if not required_files.issubset(filenames):
             continue
@@ -226,7 +243,7 @@ def parse_args():
     parser.add_argument(
         "--base_path",
         default=str(PROJECT_ROOT / "data/PRDBench/test"),
-        help="PRDBench root containing source_images, target_images and mask folders.",
+        help="PRDBench root containing source_images_rgb, target_images_rgb and mask folders.",
     )
     parser.add_argument(
         "--model_path",
