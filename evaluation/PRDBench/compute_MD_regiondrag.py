@@ -59,7 +59,7 @@ def main():
                         default=os.path.join(PROJECT_ROOT, "data/PRDBench/test/drag_data.json"),
                         help="Path to drag_data.json")
     parser.add_argument("--source_images_dir", type=str,
-                        default=os.path.join(PROJECT_ROOT, "data/PRDBench/test/source_images_rgb"),
+                        default=os.path.join(PROJECT_ROOT, "data/PRDBench/test/source_images"),
                         help="Directory of source images")
     parser.add_argument("--edited_dir", type=str,
                         default=os.path.join(PROJECT_ROOT, "outputs/prdbench/results"),

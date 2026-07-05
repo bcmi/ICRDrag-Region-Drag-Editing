@@ -120,7 +120,7 @@ def load_prd_sample(entry, base_path, image_width, image_height):
     src_mask_name = os.path.basename(entry["src_mask_path"]).replace("mask", "color")
     tgt_mask_name = os.path.basename(entry["tgt_mask_path"]).replace("mask", "color")
 
-    src_img_path = os.path.join(base_path, "source_images_rgb", src_img_name)
+    src_img_path = os.path.join(base_path, "source_images", src_img_name)
     src_mask_path = os.path.join(base_path, "source_masks_color", src_mask_name)
     tgt_mask_path = os.path.join(base_path, "target_masks_color", tgt_mask_name)
 
@@ -236,7 +236,7 @@ def parse_args():
     parser.add_argument(
         "--base_path",
         default=str(PROJECT_ROOT / "data/PRDBench/test"),
-        help="PRDBench root containing source_images_rgb, target_images_rgb and mask folders.",
+        help="PRDBench root containing source_images, target_images and mask folders.",
     )
     parser.add_argument(
         "--model_path",

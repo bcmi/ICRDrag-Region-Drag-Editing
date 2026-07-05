@@ -152,7 +152,7 @@ def main():
         "--source_images_dir",
         type=str,
         default=os.path.join(
-            PROJECT_ROOT, "data/PRDBench/test/source_images_rgb"
+            PROJECT_ROOT, "data/PRDBench/test/source_images"
         ),
         help="Directory of source images",
     )

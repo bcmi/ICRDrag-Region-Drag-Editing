@@ -37,7 +37,7 @@ The 287,153 tuples are generated from `processed_videos_rgb/` and
 PRDBench is the main quantitative benchmark with 1000 tuples. DragBench is also
 provided for evaluating ICRDrag on DragBench-DR and DragBench-SR.
 For PRDBench inference and evaluation, use the released RGB image folders
-`source_images_rgb/` and `target_images_rgb/`, together with the color mask
+`source_images/` and `target_images/`, together with the color mask
 folders `source_masks_color/` and `target_masks_color/`.
 
 ## Dataset Download
@@ -205,7 +205,7 @@ MSE / LPIPS / SSIM:
 
 ```bash
 python3 evaluation/PRDBench/run_eval_mse_lpips_ssim.py \
-  --source_dir data/PRDBench/test/target_images_rgb \
+  --source_dir data/PRDBench/test/target_images \
   --edited_dir outputs/prdbench/results \
   --output outputs/evaluation/similarity_results/icrdrag_results.txt
 ```
@@ -215,7 +215,7 @@ MD:
 ```bash
 python3 evaluation/PRDBench/compute_MD_regiondrag.py \
   --drag_data_json data/PRDBench/test/drag_data.json \
-  --source_images_dir data/PRDBench/test/source_images_rgb \
+  --source_images_dir data/PRDBench/test/source_images \
   --edited_dir outputs/prdbench/results \
   --output_dir outputs/evaluation/MD_results \
   --method_name ICRDrag \
@@ -228,7 +228,7 @@ mMD:
 ```bash
 python3 evaluation/PRDBench/compute_mMD_draglora.py \
   --drag_data_json data/PRDBench/test/drag_data.json \
-  --source_images_dir data/PRDBench/test/source_images_rgb \
+  --source_images_dir data/PRDBench/test/source_images \
   --source_masks_dir data/PRDBench/test/source_masks_color \
   --target_masks_dir data/PRDBench/test/target_masks_color \
   --edited_dir outputs/prdbench/results \

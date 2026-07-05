@@ -13,7 +13,7 @@ from skimage.metrics import structural_similarity
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Defaults for the release layout.
-REFERENCE_IMAGE_DIR = os.path.join(PROJECT_ROOT, "data/PRDBench/test/target_images_rgb")
+REFERENCE_IMAGE_DIR = os.path.join(PROJECT_ROOT, "data/PRDBench/test/target_images")
 EDITED_IMAGE_DIR = os.path.join(PROJECT_ROOT, "outputs/prdbench/results")
 OUTPUT_TXT = os.path.join(PROJECT_ROOT, "outputs/evaluation/similarity_results/icrdrag_results.txt")
 
