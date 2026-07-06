@@ -21,43 +21,32 @@ Note that ICRDrag does not guarantee that every case reaches the ideal edit in a
 
 ## Dataset Overview
 
-We release the PRD training set and two inference/evaluation benchmarks used by
-ICRDrag.
+We release the PRD training set and two inference/evaluation benchmarks used by ICRDrag.
 
-PRD is the training dataset for region-based image dragging. It contains
-287,153 tuples:
+PRD is the training dataset for region-based image dragging. It contains 287,153 tuples:
 
 ```text
 source image, source region mask, target image, target region mask
 ```
 
-The 287,153 tuples are generated from `processed_videos_rgb/` and
-`mask_numpys/` with `preprocessing/prepare_prd_tuples.py`.
+The 287,153 tuples are generated from `processed_videos_rgb/` and `mask_numpys/` with `preprocessing/prepare_prd_tuples.py`.
 
-PRDBench is the main quantitative benchmark with 1000 tuples. DragBench is also
-provided for evaluating ICRDrag on DragBench-DR and DragBench-SR.
-For PRDBench inference and evaluation, use the released RGB image folders
-`source_images/` and `target_images/`, together with the color mask
-folders `source_masks_color/` and `target_masks_color/`.
+PRDBench is the main quantitative benchmark with 1000 tuples. DragBench is also provided for evaluating ICRDrag on DragBench-DR and DragBench-SR. For PRDBench inference and evaluation, use the released images `source_images/` and `target_images/`, together with the region masks `source_masks_color/` and `target_masks_color/`.
 
 ## Dataset Download
 
-Datasets and our results are available from
-[[Baidu_Cloud]](https://pan.baidu.com/s/10c47ayBtbluhMzJ-Ocl3LQ?pwd=a83m)
-(access code: `a83m`). 
+Datasets and our results are available from [[Baidu_Cloud]](https://pan.baidu.com/s/10c47ayBtbluhMzJ-Ocl3LQ?pwd=a83m)(access code: `a83m`). 
 
 We release the following assets:
 
 ```text
-PRD_train_processed_videos.tar     # time-subsampled PRD training videos
-PRD_train_processed_videos_rgb.tar # RGB-converted PRD training videos
+PRD_train_processed_videos_rgb.tar #  time-subsampled PRD training videos
 mask_numpys.tar.gz                 # panoptic segmentation masks for PRD training videos
 PRD_train_tuples_287153.tar        # generated 287,153 PRD training tuples
 PRDBench_test.tar.gz               # PRDBench test set
 DragBench.tar.gz                   # DragBench test set
 PRDBench_results_opt.tar           # best PRDBench results
 DragBench_result.tar               # best DragBench results
-ICRDrag_weights.tar.gz             # ICRDrag model weights
 ```
 
 After downloading, the expected data layout is:
@@ -77,9 +66,7 @@ data/
 
 ## Model Download
 
-Model weights are available from
-[[Baidu_Cloud]](https://pan.baidu.com/s/1YpNXdfqOu7fOrJYKGdb-Lw?pwd=63ue)
-(access code: `63ue`).
+Model weights are available from [[Baidu_Cloud]](https://pan.baidu.com/s/1YpNXdfqOu7fOrJYKGdb-Lw?pwd=63ue)(access code: `63ue`) or [[Dropbox]](https://www.dropbox.com/scl/fi/8sqsstdqjgf230bpvh82u/ICRDrag_weights.tar.gz?rlkey=jbqjv6p3znuxxdpl7hnn8eo2p&st=bsxr4f30&dl=0).
 
 The model weights should be restored to:
 
@@ -95,17 +82,12 @@ weights/ICRDrag/
 
 ## PRD Tuple Construction
 
-The released PRD training data is stored as RGB-converted time-subsampled videos
-and per-frame panoptic segmentation masks. During training, ICRDrag samples
-adjacent frames from `processed_videos_rgb/`, reads the corresponding `.npy`
-masks from `mask_numpys/`, and dynamically constructs:
-
+The released PRD training data is stored as time-subsampled videos and per-frame panoptic segmentation masks. During training, ICRDrag samples adjacent frames from `processed_videos_rgb/`, reads the corresponding `.npy` masks from `mask_numpys/`, and dynamically constructs:
 ```text
 source image, source region mask, target image, target region mask
 ```
 
-We provide a standalone script that reproduces this tuple construction process
-for inspection or preprocessing:
+We provide a standalone script that reproduces this tuple construction process for inspection or preprocessing:
 
 ```bash
 python3 preprocessing/prepare_prd_tuples.py \
@@ -117,13 +99,11 @@ python3 preprocessing/prepare_prd_tuples.py \
   --video_channel_order bgr
 ```
 
-The script writes RGB images and RGB region masks to `output_dir`, together
-with a `tuples.json` metadata file using relative paths.
+The script writes images and region masks to `output_dir`, together with a `tuples.json` metadata file.
 
 ## Our ICRDrag
 
-This repository provides the PyTorch implementation, inference scripts,
-evaluation scripts.
+This repository provides the PyTorch implementation, inference scripts, evaluation scripts.
 
 ## Installation
 
@@ -134,8 +114,7 @@ git clone https://github.com/bcmi/ICRDrag-Region-Drag-Editing.git
 cd ICRDrag-Region-Drag-Editing
 ```
 
-Download the datasets, best results, and model weights from the two Baidu Cloud
-links listed above, then restore them to `data/` and `weights/`.
+Download the datasets, best results, and model weights from the two Baidu Cloud links listed above, then restore them to `data/` and `weights/`.
 
 Install dependencies:
 
@@ -143,13 +122,11 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-`flash-attn` and `pytorch3d` are optional for this release path. Install them
-only if you explicitly need FlashAttention kernels or multiview/ray generation.
+`flash-attn` and `pytorch3d` are optional for this release path. Install them only if you explicitly need FlashAttention kernels or multiview/ray generation.
 
 ## Environment
 
-We tested the release with Python 3.10 and PyTorch CUDA wheels. A clean
-environment can be created with:
+We tested the release with Python 3.10 and PyTorch CUDA wheels. A clean environment can be created with:
 
 ```bash
 conda create -n icrdrag python=3.10 pip -y
@@ -159,8 +136,7 @@ pip install -r requirements.txt
 
 ## Inference
 
-Run commands from the repository root. Make sure `weights/ICRDrag/` and
-the target benchmark data have been restored first.
+Run commands from the repository root. Make sure `weights/ICRDrag/` and the target benchmark data have been restored first.
 
 ### PRDBench
 
@@ -273,9 +249,6 @@ If you use ICRDrag, PRD, PRDBench, or the released results, please cite:
   year={2026}
 }
 ```
-
-
-
 
 
 ## Acknowledgement
